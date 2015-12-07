@@ -1,0 +1,96 @@
+\documentclass[10pt,a4paper,article,oneside]{memoir}
+\usepackage{tikz}
+%\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[swedish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{clrscode}
+\usepackage{microtype}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+\usepackage{tabularx}
+%\usepackage{minibox}
+\usepackage{listings}
+
+%\usepackage[margin=1in]{geometry}
+
+
+
+\author{Tim Olsson}
+
+\title{Mästarprov 2}
+
+\checkandfixthelayout{}
+\begin{document}
+
+
+%\begin{titlingpage}
+\maketitle
+%\end{titlingpage}
+
+%\newpage
+
+\subsection{Flyktingplaceringsproblemet}
+
+Vi inför ett mål M i indata i formuleringen av optimeringsproblemet som beslutsproblem:
+
+Indata: Två heltal, n, och M samt en lista med flyktinggrupper $({fg_1,...,fg_m})$, där $fg_i$ är en uppsättning par av tal som beskriver antal
+personer per grupp och dess prioritering. M är vårt mål. Alla tal är positiva heltal där prioriteringarna är mellan 1 och 5.
+
+Fråga: Går det att välja ut en samling alternativ från listan med par, $(a_1,p_1) \in fg_1, ...(a_m,p_m) \in fg_m$, så att
+$\sum_{i=1}^{m}a_i = n$ och $\sum_{i=1}^{m} a_ip_i >= M$?
+
+För att visa att Flyktingplaceringsproblemet ligger i NP ska det för varje ja-instans, en lösning verifieras i polynomisk tid. Låt
+lösningen bestå av dom valda alternativen $(a_1,p_1),...,(a_m,p_m)$. Verifieringsalgoritmen behöver kolla att summan av 
+alternativpersonerna blir n och att summan av produkterna av alternativpersonerna och alternativprioriteringarna blir minst K.
+
+\begin{codebox}
+    \Procname{$\proc{VerifyPlacering} ([(a_1,p_1)..(a_m,p_m)], n, M) $ }
+\zi $priosum \gets 0$
+\zi $pplsum \gets 0$
+\zi \For $i \gets 1$ \To $M$
+\zi    \Do $\id{pplsum} \gets \id{pplsum} + a_i$
+\End
+\zi    \Do  $\id{priosum}  \gets \id{priosum} + a_ip_i $
+\End
+\zi if sum < K or sum != n then return false
+\zi \Return $true$
+\end{codebox}
+
+Om antalet bitar i indata är högst n, så tar en addition högst bitkostnaden O(n) och bitkomplexiteten för additionerna blir O(nm) 
+vilket är polynomiskt.
+
+Vi visar att problemet är NP-svårt med en reduktion av delmängdssumma. Vi bygger en grupp av människor för varje tal i mängden,
+där varje grupp innehåller två alternativ, dels antalet personer i gruppen och dels noll. Dessutom inför vi en till grupp som har ett enda alternativ, nämligen den sökta delmängdssumman. Vi låter alla priorieringar vara ett och målet lika med antalet grupper av
+människor.
+
+\begin{codebox}
+    \Procname{$\proc{Delmängdssumma} ({a_i},...{a_m}), K$ }
+\zi \For $i \gets 1$ \To $m$
+\zi \Do $\id{fg_i} \gets \id{(a_i,1)}$
+\End
+\zi $fg_(i+1) \gets \id{(M,1)}$
+\zi $M \gets n+1$
+\zi \Return Flykting($(fg_i), M$)
+\end{codebox}
+
+Om det existerar en delmängd med summan K så väljer vi ut motsvarande alternativ av grupper och nollalternativet för alla andra
+grupper. Antalet personer som valts matchar perfekt men den sökta delmängdssumman. Detta är alltså en ja-instans till
+Flyktingplaceringsproblemet. Antag att vi har en ja-instans till flyktingplaceringsproblemet som skapats av reduktionen och vill
+konstruera en ja-instans till delmängsproblemet. Dom nollskilda talen i dom valda alternativen har då samma summa som vår extra 
+parameter, dvs antalet platser i flyktingboendet.
+
+Reduktionen går i O(m) tid och är därför polynomisk. Eftersom vi kan verifiera en ja-instans på polynomisk tid 
+ligger problemet i NP, då vi dessutom kan reducera delmängdsumma till problemet är problemet minst lika svårt som delmängdssumma.
+Därför är flyktingplaceringsproblemet NP-fullständigt.
+
+
+
+\subsection{Konspirationsdetektionsproblemet}
+
+För att visa att konspirationsdetektionsproblemet ligger i NP ska vi ge en algoritm som givet indata till en ja-instans
+och en påstådd lösning(vilka personer som är konspiratörer, resten är då övriga, samt vilka de känner) verifierar att
+lösningen verkligen är en lösning.eh fak orka
+
+\end{document}
